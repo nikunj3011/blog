@@ -1,7 +1,7 @@
 ArrayList<PShape> rings = new ArrayList<PShape>();
 
 void setup(){
-  size(1200, 600, P3D);
+  size(640, 360, P3D);
   blendMode(ADD);
   smooth(8);  
   float innerRad = 1f, outerRad = 9f, increment = 1f;
