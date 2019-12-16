@@ -99,35 +99,18 @@
 													  fill(255,0,0);
 													  rectMode(CENTER);
 													  rect(width-mouseX,height-mouseY,30,30);
-
+													  rect(height-mouseY,width-mouseX,30,30);
 													}
 
 												</script>
 												<canvas width="640" height="360"></canvas>
 																						
 												
-												<div>Another one</div>		
-												<div class="proc">	
-												<script type="application/processing"> 
-													void setup(){
-													  //only once
-													  size(640,360);
-													  background(50);
-													}
-													void draw(){
-													  //conti
-													  //background(50);
-													  stroke(150,100,0);
-													  fill(255,0,0);
-													  
-													  line(pmouseX,pmouseY,mouseX,mouseY);
-
-													}
-
-												</script>
-												<canvas width="640" height="360"></canvas>
-									
-<canvas width="640" height="360" data-processing-sources="myProgram.pde"></canvas>
+									<br/>
+<canvas width="640" height="360" data-processing-sources="intro.pde"></canvas><br/>
+<canvas width="640" height="360" data-processing-sources="intro2.pde"></canvas><br/>
+<canvas width="640" height="360" data-processing-sources="mousepositiondraw.pde"></canvas><br/>
+<canvas width="640" height="360" data-processing-sources="draw_line_mouse_postition.pde"></canvas><br/>
 									
 		            <div class="about-author d-flex p-4 bg-light">
 		              <div class="bio mr-5">
