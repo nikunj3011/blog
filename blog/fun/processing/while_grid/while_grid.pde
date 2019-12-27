@@ -9,8 +9,8 @@ void setup(){
 }
 void draw(){
   //conti
-  background(random(0,255),random(0,255),random(0,255));
-  spacing=spacing+random(-2,2);
+  //background(random(0,255),random(0,255),random(0,255));
+  //spacing=spacing+random(-2,2);
   stroke(255);
   strokeWeight(2);
   x=0;
