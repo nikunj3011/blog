@@ -17,7 +17,7 @@ void draw(){
   for(int x=0;x<width;x=x+100){
    
   for(int y=0;y<width;y=y+100){
-    fill(random(255),random(255),random(255));
+    fill(random(255));
     rect(x,y,100,100);
   }  
   }
