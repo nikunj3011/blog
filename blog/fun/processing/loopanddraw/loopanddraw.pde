@@ -9,7 +9,8 @@ background(0);
 }
 void draw(){
   //conti
-  background(random(0,255),random(0,255),random(0,255));
+  //background(random(0,255),random(0,255),random(0,255));
+  background(0);
   spacing=spacing+random(-2,2);
   stroke(255);
   strokeWeight(2);
@@ -21,7 +22,7 @@ void draw(){
     x=x+spacing;
     y=y+spacing;
   }  
-  delay(100);
+  //delay(100);
    
 }
 void mousePressed(){
