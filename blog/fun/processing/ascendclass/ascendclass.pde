@@ -41,7 +41,7 @@ void setup(){
   b= new Bubble();
 }
 void draw(){
-  background(255);
+  background(100);
   b.ascend();
   b.display();
 }
