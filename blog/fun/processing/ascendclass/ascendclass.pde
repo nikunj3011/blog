@@ -13,6 +13,12 @@ class Bubble{
     stroke(0);
     fill(127);
     ellipse(x,y,50,50);
+    if (x==0){
+    x= width/2;
+    }
+    if (y==0){
+    y= height;
+    }
   }
   void pop(){
     x=700;
@@ -26,6 +32,9 @@ class Bubble{
     background(random(255),random(255),random(255));
   }
 }
+
+
+
 Bubble b;
 void setup(){
   size(600,300);
