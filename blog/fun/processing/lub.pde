@@ -1,70 +1,132 @@
-//based on https://www.openprocessing.org/sketch/816944
-//somewhat inspired by https://codepen.io/al-ro/pen/BaaBage?editors=1010
-//resources http://mathworld.wolfram.com/HeartCurve.html
-ArrayList<Node> arrayNodes = new ArrayList<Node>();
-float scaleDiv = 50; //scale the size of the heart
-void setup() {
-  size(720, 720);
-  colorMode(HSB, 100);
-  strokeWeight(2);
-  translate(width/2, height/2);
-  //load Nodes
-  for (int angle = 0; angle < 360; angle += 2) {
-    arrayNodes.add(
-      new Node(
-      16*pow(sin(radians(angle)), 3) * width/scaleDiv, 
-      (-1*(13*cos(radians(angle))-5*cos(radians(2*angle))-2*cos(radians(3*angle))-cos(radians(4*angle)))*width/scaleDiv), 
-      angle)
-    );
-  }
+import java.lang.*;
+
+
+ArrayList<PVector> points;    // points which are plotted
+float m=1;                    //slope of the line
+float b=0;                    //y intercept of the line 
+boolean flag = true;          //True for gradient descent and False for least square 
+
+void setup(){
+  size(800,800);
+  background(255);
+  points = new ArrayList<PVector>();
 }
-void draw() {
-  background(0);
-  //some gray lines on background
-  stroke(100, 10);
-  for (int i = 0; i < arrayNodes.size(); i += 1) {
-    if (random(1)> 0.9) continue;
-    line(0, height*i/arrayNodes.size(), width, height*i/arrayNodes.size());
-  }
-  translate(width/2, height/2);
-  int div = arrayNodes.size()/2;
-  //display Nodes
-  for (int i = 0; i < arrayNodes.size(); i += 1) {
-    //float hue = map(i, 0, arrayNodes.size(), 0, 100);
-    stroke(100);
-    if (i < (floor(frameCount/2) % arrayNodes.size()) * 3) {
-    if (random(1)> 0.75) continue;
-      int offsetIndex = (i + floor(frameCount/2)) % arrayNodes.size();
-      line(arrayNodes.get(i).x, arrayNodes.get(i).y, arrayNodes.get(offsetIndex).x, arrayNodes.get(offsetIndex).y);
+
+
+void draw(){
+  background(255);
+  drawPoints();
+  try{
+    if(flag == true){
+      fill(0);
+      textAlign(CENTER);
+      textSize(30);
+      text("Gradient Descent",width/2,50);
+      gradientDescent();
+      textSize(20);
+      text("Press RIGHT for Least Square",width/2,height-50);
+     }else{
+      fill(0);
+      textAlign(CENTER);
+      textSize(30);
+      text("Least Square",width/2,50);
+      leastSqure();
+      textSize(20);
+      text("Press LEFT for Gradient Descent",width/2,height-50);
     }
-    if (random(1)> 0.75) continue;
-    int nextIndex = (i + 1) % div;// if div = arrayNodes.size() the heart will have boundary but not line scribbles
-    //rotate(PI/1.5);// some afterthoughts
-    line(arrayNodes.get(i).x, arrayNodes.get(i).y, arrayNodes.get(nextIndex).x, arrayNodes.get(nextIndex).y);
-    arrayNodes.get(i).move();
-  }  
-  //println(frameRate);
+
+  }catch(Exception e){  
+      e.printStackTrace();
+  }
+  drawLine();     // drawing a line
 }
 
-class Node {
-  public float x;
-  public float y;
-  public float i;
-  public float a;
 
-  Node(float x, float y, float a) {
-    this.x = x;
-    this.y = y;
-    this.a = a;
-    this.i = a;//initial angle I guess
+//Gradient Descent Method
+void gradientDescent() throws Exception{
+  float learning_rate = 0.01;
+  
+  for(PVector point : points){
+    float x = point.x;
+    float y = point.y;
+    float guess = (m*x) + b;
+    float error = y - guess;
+    m = m + (error*x) * learning_rate;    // m is the slope of the line
+    b = b + error * learning_rate;        // y intercept of the line
+  }
+}
+
+//Least Square Method
+void leastSqure() throws Exception{
+
+  float xmean = 0, ymean = 0;
+  for(PVector point: points){
+    xmean += point.x/points.size();
+    ymean += point.y/points.size();
   }
 
-  void move() {
-    this.x += 16*pow(sin(radians(this.a + this.i)), 3)/scaleDiv;
-    this.y -= ( 13*cos(radians(this.a + this.i))
-      -5*cos(radians(2*(this.a + this.i)))
-      -2*cos(radians(3*(this.a + this.i)))
-      -cos(radians(4*(this.a + this.i))) )/scaleDiv;
-    this.a+=10;
+  float numerator = 0,denominator = 0;
+  for(PVector point : points){
+    numerator += (point.x-xmean)*(point.y-ymean);
+    denominator += (point.x-xmean)*(point.x-xmean);
+  }
+  m = numerator/denominator;    // m slope of the line
+  b = ymean - (m*xmean);        // y intercept of the line
+  
+}
+ 
+  
+// draws a line  
+void drawLine(){
+  
+  //First Point
+  float x1 = 0;
+  float y1 = (m*x1) + b;
+  x1 = map(x1,0,1,0,width);
+  y1 = map(y1,0,1,height,0);
+  
+  //Second Point
+  float x2 = 1;
+  float y2 = (m*x2) +b;
+  x2 = map(x2,0,1,0,width);
+  y2 = map(y2,0,1,height,0);
+  
+  stroke(0,0,255);
+  line(x1,y1,x2,y2);
+}
+
+// draws Points on the canvas
+void drawPoints(){
+  for(PVector point:points){
+    fill(0,255,0);
+    ellipseMode(CENTER);
+    float x = map(point.x,0,1,0,width);
+    float y = map(point.y,0,1,height,0); 
+    ellipse(x,y,20,20);
+  }
+}
+
+
+//Mouse Events
+void mousePressed(){
+  float x = map(mouseX,0,width,0,1);
+  float y = map(mouseY,0,height,1,0);
+  points.add(new PVector(x,y));
+}
+
+
+//Keyboard Events
+void keyPressed(){
+  if(keyCode == RIGHT){
+    for(int i = points.size()-1;i>=0;i--){
+      points.remove(i);
+    }
+    flag = false;
+  }
+  else if(keyCode == LEFT){
+    for(int i = points.size()-1;i>=0;i--){
+      points.remove(i);
+    }
+    flag = true;
   }
 }
